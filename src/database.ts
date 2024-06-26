@@ -71,9 +71,24 @@ export async function countPosts(client: pg.Client): Promise<number> {
   return result.rows[0][0];
 }
 
+export async function findAllPosts(client: pg.Client): Promise<Post []> {
+  const sql = "select * from posts";
+
+  const result = await client.query<Post>(sql);
+
+  return [...result];
+}
+
 export async function connect(config: DbConfig): Promise<pg.Client> {
   return await pg.connect(config);
 }
+
+/*
+export function connect(config: DbConfig): pg.Client {
+
+  return pg.connect(config)
+    .then( connection => { return connection; });
+} */
 
 /*
 async function test_thing() {

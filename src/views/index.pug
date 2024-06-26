@@ -1,4 +1,11 @@
 extends layout
 
 block content
-  h1 Hello?
+  h1 Found #{postCount} posts
+
+  each post in posts
+    .post
+      h2
+        a( href=post.link ) #{post.title}
+
+      p #{post.sub_reddit} #{post.date_posted}
