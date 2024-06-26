@@ -1,17 +1,6 @@
-// import { ClientRequest } from 'http';
-// import * as http from 'https';
+import * as types from './Types';
 import fetch from 'node-fetch';
 import fs from 'fs';
-import { pseudoRandomBytes } from 'crypto';
-
-/* async function pokeypokey() {
-  const response = await fetch('https://old.reddit.com/r/all.json');
-
-  const { data, errors } = await response.json();
-
-  console.log("data=", data);
-  console.log("errors=", errors);
-} */
 
 function pokeypokey() {
 
@@ -23,16 +12,7 @@ function pokeypokey() {
 
 //pokeypokey();
 
-interface RedditPost {
-  redditId: string,
-  created: Date,
-  url: string,
-  authorName: string,
-  title: string,
-  subreddit: string
-}
-
-function parseData() : Promise<RedditPost []> {
+export function parseData() : Promise<types.Post []> {
 
   return new Promise( (resolve, reject) => {
     fs.readFile('./cache/2024-06-25-12-29.json', 'utf-8', (err, contents) => {
@@ -48,12 +28,11 @@ function parseData() : Promise<RedditPost []> {
           // console.log('----');
 
           return {
-            redditId: node.data['id'],
-            created: new Date(node.data.created_utc * 1000),
-            url: node.data.url,
-            authorName: node.data.author,
-            title: node.data.title,
-            subreddit: node.data.subreddit
+            reddit_id:   node.data['id'],
+            title:       node.data.title,
+            link:        node.data.url,
+            sub_reddit:  node.data.subreddit,
+            date_posted: new Date(node.data.created_utc * 1000)
           }
         });
 
@@ -62,13 +41,13 @@ function parseData() : Promise<RedditPost []> {
   });
 }
 
-async function test() {
+/* async function test() {
   const posts = await parseData();
 
   console.log(posts);
-}
+} */
 
-test();
+// test();
 
 /*
   {

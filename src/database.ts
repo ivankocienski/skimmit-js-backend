@@ -1,15 +1,6 @@
-import test from 'node:test';
-import * as config from './Config';
 import * as pg from 'ts-postgres';
+import { Post, DbConfig } from './Types';
 
-export interface Post {
-  id: number,
-  reddit_id?: string,
-  title?: string,
-  link?: string,
-  sub_reddit?: string,
-  date_posted?: Date
-}
 
 interface InsertQueryReducer {
   queryFieldNames: string[],
@@ -23,7 +14,7 @@ interface InsertQueryOutput {
   queryValues: any[]
 }
 
-async function createPost(client: pg.Client, fields: Post): Promise<any> {
+export async function createPost(client: pg.Client, fields: Post): Promise<any> {
 
   let buildQuery = function(fieldsRecord: Record<string, any>, fieldNames: string[]): InsertQueryOutput {
 
@@ -74,13 +65,17 @@ async function createPost(client: pg.Client, fields: Post): Promise<any> {
   return fields;
 }
 
-async function countPosts(client: pg.Client): Promise<number> {
+export async function countPosts(client: pg.Client): Promise<number> {
   const result = await client.query<number>("select count(*) as post_count from posts");
 
   return result.rows[0][0];
 }
 
+export async function connect(config: DbConfig): Promise<pg.Client> {
+  return await pg.connect(config);
+}
 
+/*
 async function test_thing() {
   const client = await pg.connect(config.dbConfig());
 
@@ -99,6 +94,7 @@ async function test_thing() {
 }
 
 test_thing();
+*/
 
 /* async function findOrCreatePost(client: pg.Client, redditId: string, fields: Post): Post {
   const client = await pg.connect(config.dbConfig());

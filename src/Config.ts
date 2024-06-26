@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+import { DbConfig } from './Types';
 
 dotenv.config();
 
@@ -10,7 +11,7 @@ export function databaseUrl(): string {
   return (process.env.DATABASE_URL || '');
 }
 
-export function dbConfig() {
+export function dbConfig(): DbConfig {
   return {
     user:     process.env.DB_USER,
     database: process.env.DB_DATABASE,
