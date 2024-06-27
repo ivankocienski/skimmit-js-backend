@@ -7,7 +7,7 @@ import * as database from './database';
 async function main() {
   const client = await database.connect(config.dbConfig());
 
-  const posts = await reddit.parseData();
+  const posts = await reddit.downloadReddit('unitedkingdom');
 
   posts.forEach( async post => {
     const redditId: string = post.reddit_id || '';
@@ -28,3 +28,4 @@ async function main() {
 }
 
 main();
+

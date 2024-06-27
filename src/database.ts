@@ -1,7 +1,5 @@
 import * as pg from 'ts-postgres';
 import { Post, DbConfig } from './Types';
-import { ParseConfigFileHost } from 'typescript';
-
 
 interface InsertQueryReducer {
   queryFieldNames: string[],
@@ -93,40 +91,3 @@ export async function connect(config: DbConfig): Promise<pg.Client> {
   return await pg.connect(config);
 }
 
-/*
-export function connect(config: DbConfig): pg.Client {
-
-  return pg.connect(config)
-    .then( connection => { return connection; });
-} */
-
-/*
-async function test_thing() {
-  const client = await pg.connect(config.dbConfig());
-
-  const postValues: Post = {
-    id: 0,
-    reddit_id: "r123",
-    title: "A post title",
-    link: "http://example.com",
-    sub_reddit: "Subreddit name",
-    date_posted: new Date
-  };
-
-  const result = await createPost(client, postValues);
-
-  console.log(result);
-}
-
-test_thing();
-*/
-
-/* async function findOrCreatePost(client: pg.Client, redditId: string, fields: Post): Post {
-  const client = await pg.connect(config.dbConfig());
-
-  const response = await client.query<User>("select id, email, first_name, last_name from users");
-
-  console.log(response);
-}
-
-poke(); */

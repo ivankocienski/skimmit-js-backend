@@ -1,53 +1,51 @@
 import * as types from './Types';
 import fetch from 'node-fetch';
 import fs from 'fs';
+import path from 'path';
 
-function pokeypokey() {
+export async function downloadReddit(redditName: string): Promise<types.Post []> {
 
-  fetch('https://old.reddit.com/r/all.json')
-    .then( (res) => res.json() )
-    .then( (data) => console.log("data=", JSON.stringify(data)) )
-    .catch( (err: any) => console.error(err) );
-}
+  let cacheFilePath = (now: Date): string => {
+    const   year: string = now.getFullYear().toString();
+    const  month: string = now.getMonth()   .toString().padStart(2, '0');
+    const    day: string = now.getDay()     .toString().padStart(2, '0');
+    const   hour: string = now.getHours()   .toString().padStart(2, '0');
+    const minute: string = now.getMinutes() .toString().padStart(2, '0');
+    const second: string = now.getSeconds() .toString().padStart(2, '0');
 
-//pokeypokey();
+    const fileName:string = `${year}-${month}-${day}-${hour}-${minute}-${second}.json`;
 
-export function parseData() : Promise<types.Post []> {
+    return path.join(process.cwd(), `/cache`, fileName);
+  };
 
-  return new Promise( (resolve, reject) => {
-    fs.readFile('./cache/2024-06-25-12-29.json', 'utf-8', (err, contents) => {
-      if(err) {
-        return reject(err);
+  const url = `https://old.reddit.com/r/${redditName}.json`;
+  console.log("downloading ", url);
+
+  const result = await fetch(url);
+  const resultData = await result.json();
+
+  const payload = {
+    redditName: redditName,
+    data: resultData
+  };
+  const outputPath: string = cacheFilePath(new Date);
+  console.log("Writing to ", outputPath);
+
+  fs.writeFileSync(outputPath, JSON.stringify(payload));
+
+  const postList = resultData.data.children
+    .map((node: any) => {
+      return {
+        reddit_id: node.data['id'],
+        title: node.data.title,
+        link: node.data.url,
+        sub_reddit: node.data.subreddit,
+        date_posted: new Date(node.data.created_utc * 1000)
       }
-
-      const data = JSON.parse(contents)
-
-      const postList = data.data.children
-        .map( (node: any) => {
-          // console.log("node=", node);
-          // console.log('----');
-
-          return {
-            reddit_id:   node.data['id'],
-            title:       node.data.title,
-            link:        node.data.url,
-            sub_reddit:  node.data.subreddit,
-            date_posted: new Date(node.data.created_utc * 1000)
-          }
-        });
-
-        resolve(postList);
     });
-  });
+
+  return postList;
 }
-
-/* async function test() {
-  const posts = await parseData();
-
-  console.log(posts);
-} */
-
-// test();
 
 /*
   {
