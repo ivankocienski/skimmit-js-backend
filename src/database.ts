@@ -1,5 +1,6 @@
 import * as pg from 'ts-postgres';
 import { Post, DbConfig } from './Types';
+import { ParseConfigFileHost } from 'typescript';
 
 
 interface InsertQueryReducer {
@@ -51,7 +52,7 @@ export async function createPost(client: pg.Client, fields: Post): Promise<any> 
 
   let { sql, queryValues } = buildQuery(
     fields as Record<string, any>,
-    [ "reddit_id", "title", "link", "sub_reddit", "date_posted" ]
+    [ "reddit_id", "title", "link", "sub_reddit", "date_posted", "have_read" ]
   );
 
   console.log(`sql="${sql}"`);
@@ -64,6 +65,15 @@ export async function createPost(client: pg.Client, fields: Post): Promise<any> 
 
   return fields;
 }
+
+export async function doesPostWithRedditIdExist(client: pg.Client, redditId: string): Promise<boolean> {
+  const result = await client.query<number>("select count(*) as post_count from posts where reddit_id=$1", [ redditId ]);
+  const count = result.rows[0][0];
+  return count > 0;
+}
+
+/* export async function transaction(client: pg.Client, callback: Function): Promise<any> {
+} */
 
 export async function countPosts(client: pg.Client): Promise<number> {
   const result = await client.query<number>("select count(*) as post_count from posts");

@@ -31,3 +31,9 @@ CREATE TABLE IF NOT EXISTS posts (
 );
 
 ```
+
+Now need a `have_read` flag on posts
+
+```
+ALTER TABLE posts ADD COLUMN have_read BOOLEAN DEFAULT FALSE;
+```

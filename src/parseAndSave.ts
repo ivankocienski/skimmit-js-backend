@@ -10,8 +10,20 @@ async function main() {
   const posts = await reddit.parseData();
 
   posts.forEach( async post => {
-    const result = await database.createPost(client, post);
-    console.log("result=", result);
+    const redditId: string = post.reddit_id || '';
+
+    if(redditId.length > 0) {
+      // FIXME: these should be in a transaction
+      const alreadyExists = await database.doesPostWithRedditIdExist(client, redditId);
+
+      if(alreadyExists) {
+        console.log(`${redditId}: already exists, skipping`);
+
+      } else {
+        const result = await database.createPost(client, post);
+        console.log(`${redditId}: saved.`);
+      }
+    }
   });
 }
 

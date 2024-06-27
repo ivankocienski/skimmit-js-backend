@@ -8,4 +8,5 @@ block content
       h2
         a( href=post.link ) #{post.title}
 
-      p #{post.sub_reddit} #{post.date_posted}
+      p <em>#{post.sub_reddit}</em> #{formatDateTime(post.date_posted)}
+      p #{post.has_read ? "Has read" : "Has not read"}

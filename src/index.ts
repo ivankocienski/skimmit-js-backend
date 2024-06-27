@@ -5,6 +5,8 @@ import * as db from './database';
 
 const app = express();
 
+app.locals = require('./viewHelpers');
+
 app.set('view engine', 'pug');
 
 const viewsDir = path.join(__dirname, 'views');
