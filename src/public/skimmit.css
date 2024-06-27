@@ -17,6 +17,33 @@ body {
   color: #444;
 }
 
+main {
+  margin: 1em;
+}
+
+h1 {
+  font-weight: bold;
+  font-size: 2.5em;
+  margin-bottom: 0.5em;
+}
+
 .post {
   margin-bottom: 1rem;
+}
+
+.post h2 a {
+  font-weight: bold;
+}
+
+.post h2 {
+  margin-bottom: 0.25em;
+}
+
+.post p {
+  margin-left: 1em;
+  margin-bottom: 0.25em;
+}
+
+.post p em {
+  font-style: italic;
 }
