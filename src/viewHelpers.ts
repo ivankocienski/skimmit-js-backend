@@ -1,3 +1,4 @@
+import { Post } from './Types';
 
 export function formatDateTime(dateTime: Date): string {
   const   year: string = dateTime.getFullYear().toString();

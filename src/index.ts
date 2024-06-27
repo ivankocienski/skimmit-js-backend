@@ -1,5 +1,6 @@
 import path from 'path';
 import express from 'express';
+import bodyParser from 'body-parser';
 import * as config from './Config';
 import * as db from './database';
 
@@ -17,6 +18,12 @@ const staticDir = path.join(__dirname, 'public');
 console.log("staticDir=", staticDir);
 app.use(express.static(staticDir));
 
+app.use( bodyParser.urlencoded({ extended: false }) );
+
+//
+//
+//
+
 app.get('/', async (req, res) => {
   const dbClient = app.get('dbClient');
 
@@ -25,6 +32,20 @@ app.get('/', async (req, res) => {
   const posts = await db.findAllPosts(dbClient);
 
   res.render('index', { postCount: postCount, posts: posts });
+});
+
+app.post('/posts/read', async (req, res) => {
+  const dbClient = app.get('dbClient');
+  const post_id: number = parseInt(req.body.post_id, 10);
+
+  const success = await db.markPostAsRead(dbClient, post_id);
+
+  if(success) {
+    res.redirect('/');
+    return;
+  }
+
+  res.send(`Not updated`);
 });
 
 app.use((_req, res, _next) => {

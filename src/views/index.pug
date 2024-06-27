@@ -8,5 +8,8 @@ block content
       h2
         a( href=post.link ) #{post.title}
 
-      p <em>#{post.sub_reddit}</em> #{formatDateTime(post.date_posted)}
-      p #{post.has_read ? "Has read" : "Has not read"}
+      .inner
+        p <em>#{post.sub_reddit}</em> #{formatDateTime(post.date_posted)}
+        form(action="/posts/read" method="POST")
+          input(type="hidden" name="post_id" value=post.id)
+          button Read

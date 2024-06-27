@@ -70,17 +70,26 @@ export async function doesPostWithRedditIdExist(client: pg.Client, redditId: str
   return count > 0;
 }
 
+export async function markPostAsRead(client: pg.Client, postId: number): Promise<boolean> {
+  const regex = new RegExp('^UPDATE 1$');
+
+  const result = await client.query<any>("update posts set have_read=true where id=$1", [postId]);
+  const match = regex.exec(result.status || '');
+
+  return Boolean(match);
+}
+
 /* export async function transaction(client: pg.Client, callback: Function): Promise<any> {
 } */
 
 export async function countPosts(client: pg.Client): Promise<number> {
-  const result = await client.query<number>("select count(*) as post_count from posts");
+  const result = await client.query<number>("select count(*) as post_count from posts where have_read=false");
 
   return result.rows[0][0];
 }
 
 export async function findAllPosts(client: pg.Client): Promise<Post []> {
-  const sql = "select * from posts";
+  const sql = "select * from posts  where have_read=false order by date_posted";
 
   const result = await client.query<Post>(sql);
 

@@ -39,8 +39,12 @@ h1 {
   margin-bottom: 0.25em;
 }
 
-.post p {
+.post .inner {
   margin-left: 1em;
+  margin-bottom: 0.25em;
+}
+
+.post p {
   margin-bottom: 0.25em;
 }
 

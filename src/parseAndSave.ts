@@ -27,5 +27,24 @@ async function main() {
   });
 }
 
-main();
+// main();
+
+/* async function pokeUpdater() {
+  const client = await database.connect(config.dbConfig());
+
+  try {
+    const okay = await database.markPostAsRead(client, 10);
+
+    if(okay) {
+      console.log("post updated!");
+    } else {
+      console.log("something went wrong");
+    }
+
+  } catch(err) {
+    console.error(err);
+  }
+} */
+
+// pokeUpdater();
 
