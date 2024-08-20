@@ -20,6 +20,11 @@ app.use(express.static(staticDir));
 
 app.use( bodyParser.urlencoded({ extended: false }) );
 
+// https://github.com/GoogleChromeLabs/jsbi/issues/30#issuecomment-1006086291
+(BigInt.prototype as any).toJSON = function () {
+  return this.toString();
+};
+
 //
 //
 //
@@ -46,6 +51,21 @@ app.post('/posts/read', async (req, res) => {
   }
 
   res.send(`Not updated`);
+});
+
+app.get('/api/v1/posts', async (req, res) => {
+  const dbClient = app.get('dbClient');
+
+  const postCount = await db.countPosts(dbClient);
+
+  const posts = await db.findAllPosts(dbClient);
+
+  const payload = {
+    count: postCount,
+    posts: posts
+  };
+
+  res.send(payload);
 });
 
 app.use((_req, res, _next) => {
